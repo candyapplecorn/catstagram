@@ -1,0 +1,37 @@
+version: '3'
+services:
+
+  catstagram-postgres:
+    image: "postgres:latest"
+    container_name: catstagram-postgres
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_DB=catstagram
+      - POSTGRES_USER=catstagram
+      - POSTGRES_PASSWORD=catstagram
+
+  catstagram-app:
+    build:
+      context: ./catstagram-app
+      args:
+        - DATABASE_TYPE=FILE
+    container_name: catstagram-app
+    environment:
+      - DB_SERVER=catstagram-postgres
+    ports:
+      - 5000:8080
+    links:
+      - catstagram-postgres
+
+  #catstagram-ui:
+  #  build: ./catstagram-ui
+  #  container_name: catstagram-ui
+  #  ports:
+  #    - 4200:80
+  #  links:
+  #    - catstagram-app
+
+
+volumes:
+  catstagram-data:
