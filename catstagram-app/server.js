@@ -14,6 +14,12 @@ app.get('/', (req, res) => {
   res.send('Hello World!!\n');
 });
 
+// Some logging
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+});
+
 const database = getDatabase(process.env.DATABASE_TYPE);
 
 catNameMiddleware(app, database);

@@ -36,6 +36,6 @@ module.exports = function connect(kind) {
   if (/file/i.test(kind)) {
     return fakeDatabase();
   } else {
-    throw `Unknown kind of database: ${kind}`;
+    throw `Unknown kind of database: ${kind}. Please specify the environment variable DATABASE_TYPE=[FILE]`;
   }
 }
