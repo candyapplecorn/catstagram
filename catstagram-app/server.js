@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const loggerMiddleware = require('./middleware/logger');
 const catNameMiddleware = require('./controllers/cat-names.js');
 const getDatabase = require('./database/connection.js');
 
@@ -10,14 +11,11 @@ const HOST = '0.0.0.0';
 
 // App
 const app = express();
+
+loggerMiddleware(app);
+
 app.get('/', (req, res) => {
   res.send('Hello World!!\n');
-});
-
-// Some logging
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
-    next();
 });
 
 const database = getDatabase(process.env.DATABASE_TYPE);
