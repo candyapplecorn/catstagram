@@ -1,26 +1,22 @@
 'use strict';
 
-const express = require('express');
-const loggerMiddleware = require('./middleware/logger');
-const catNameMiddleware = require('./controllers/cat-names.js');
-const getDatabase = require('./database/connection.js');
+const express             = require('express');
+const logger              = require('./middleware/logger');
+const getDatabase         = require('./database/connection.js');
+const routeGenerator      = require('./routes');
+const { PORT, HOST }      = require('./constants/config');
 
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
+// Dependencies
+const database = getDatabase(process.env.DATABASE_TYPE);
+const routes = routeGenerator(database);
 
 // App
 const app = express();
 
-loggerMiddleware(app);
-
-app.get('/', (req, res) => {
-  res.send('Hello World!!\n');
-});
-
-const database = getDatabase(process.env.DATABASE_TYPE);
-
-catNameMiddleware(app, database);
+app.use(express.json());
+app.use(logger);
+app.use(routes);
 
 app.listen(PORT, HOST);
+
 console.log(`Running on http://${HOST}:${PORT}`);

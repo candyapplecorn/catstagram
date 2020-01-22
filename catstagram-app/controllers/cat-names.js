@@ -1,24 +1,33 @@
 const CatModel = require('../models/cat-names');
-const BASE_URL = '/cat_names';
 
-function catNameMiddleware(app, database) {
-  app.get(BASE_URL, async function(req, res) {
+function catNameControllerGenerator(database) {
+  async function getAllCats(req, res) {
     const catModel = new CatModel(database);
     const allCats = await catModel.getAll();
     res.json(allCats);
-  });
+  };
 
-  app.post(BASE_URL, async function(req, res) {
+  async function createCat(req, res) {
     const catModel = new CatModel(database);
-    const createdCat = await catModel.create(req.body);
-    res.json(createdCat);
-  });
+    const createdCats = await Promise.all(
+      req.body.map(name => catModel.create(name))
+    );
+    res.json(createdCats);
+  };
 
-  app.delete(BASE_URL, async function(req, res) {
+  async function deleteCat(req, res) {
     const catModel = new CatModel(database);
-    const deletedCat = await catModel.delete(req.body);
-    res.json(deletedCat);
-  });
+    const deletedCats = await Promise.all(
+      req.body.map(name => catModel.delete(name))
+    );
+    res.json(deletedCats);
+  };
+
+  return {
+    getAll: getAllCats,
+    create: createCat,
+    delete: deleteCat,
+  };
 }
 
-module.exports = catNameMiddleware;
+module.exports = catNameControllerGenerator;

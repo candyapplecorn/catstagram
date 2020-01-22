@@ -22,7 +22,7 @@ class CatNames {
 
   async delete(cat) {
     const catData = await this.getFromDB();
-    catData.cat_names = catData.catNames.filter(name => name !== cat);
+    catData.cat_names = catData.cat_names.filter(name => name !== cat);
     await this.writeToDB(catData);
     return cat;
   }
